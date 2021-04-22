@@ -282,7 +282,7 @@ void gameSelection(int mode, int level){
             initClassicGame(9, level, 0);
             break;
         case 3:
-            initHexGame(level);
+            initHexGame(level, 0);
             break;
         case 4:
             initXGame(9, level);
@@ -396,7 +396,7 @@ void loadGameSelection(int mode){
             initClassicGame(9, level, 1);
             break;
         case 3:
-            loadHexGame();
+            initHexGame(level, 1);
             break;
         case 4:
             initClassicGame(9, level, 1);

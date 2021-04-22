@@ -15,7 +15,7 @@
 const char HEXDICT[] = "0123456789ABCDEF";
 
 
-void initHexGame(int level){
+void initHexGame(int level, int load){
     srand(time(NULL));
     //criar a matrix onde se irá jogar
     cMatrix board = createMatrixHex(16);
@@ -24,7 +24,65 @@ void initHexGame(int level){
     cMatrix template = createMatrixHex(16);
     clearHex(template);
 
-    filePath("16");
+    int sizeVector;
+
+    //determina se o utilizador pretende começar um novo jogo ou recomeçar um jogo gravado, correndo assim a função consoante a escolha
+    if(load==0){
+        //escolhe aleatoriamente o ficheiro template e importa o caminho para a variavel templateSrc
+         filePath("16");
+
+        printMsgLine();
+        //importa a matrix guardada no ficheiro txt escolhido aleatoriamente para a matrix "template"
+        readGameFileHex(template, SUDOKUFILE);
+
+
+        int index = 0;
+        //algoritmo que define o numero de iterações para a geração de casas pre-definidas consoante o nível de dificuldade(1, 2) e o tamanho do jogo (4, 9, 16)
+        int setNumbers = 16 * 5 - 16 * level;
+        sizeVector = 2*setNumbers;
+
+        //vector que irá armazenar as coordenadas de todos os numeros obtidos da matrix "template"
+        int vector[sizeVector];
+
+        //atribuição de casas pre-definidas na matrix template, na matrix board
+        for (int i = 0; i < setNumbers; ++i) {
+            setPiecesHex(template, board, vector, index);
+            index+=2;
+        }
+    }else if(load == 1){
+        char path[200] = "Saved/";
+        char filename[20];
+        char ext[10] = ".txt";
+
+        clearConsole();
+        printMsgLine();
+        printOptionString("FILE TO LOAD: ");
+        fgets(filename, sizeof(filename), stdin);
+
+        strcat(path, filename);
+        strcat(path, ext);
+
+        FILE * fp;
+        fp = fopen(path,"r");
+
+        //verifica se o ficheiro foi carregado, sn volta ao ecra principal
+        if (fp == NULL) {
+            printf(".... erro a carregar ficheiro\n");
+            getchar();
+            fflush(stdin);
+            initProg();
+        }
+
+        //copia os valores encontrados no ficheiro para a matrix "board"
+        for (int i = 0; i < board.size; ++i) {
+            for (int j = 0; j < board.size; ++j) {
+                fscanf(fp,"%c ", &board.matrix[i][j]);
+            }
+        }
+
+        //dummy vector
+        int vector[2] = {99,99};
+    }
 
     printMsgLine();
     //importa a matrix guardada no ficheiro txt escolhido aleatoriamente para a matrix "template"
@@ -35,7 +93,7 @@ void initHexGame(int level){
 
     int index = 0;
     int setNumbers = 16 * 5 - 8 * level;
-    int sizeVector = 2*setNumbers;
+    sizeVector = 2*setNumbers;
     int vector[sizeVector];
     for (int i = 0; i < setNumbers; ++i) {
         setPiecesHex(template, board, vector, index);

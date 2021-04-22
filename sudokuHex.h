@@ -13,7 +13,7 @@ typedef struct{
 }cMatrix;
 
 
-void initHexGame(int level);
+void initHexGame(int level, int load);
 void loadHexGame();
 
 cMatrix createMatrixHex(int size);
